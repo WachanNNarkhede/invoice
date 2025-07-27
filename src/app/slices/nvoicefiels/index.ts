@@ -42,27 +42,11 @@ const invoiceFieldsSlice = createSlice({
   name: 'invoiceFields',
   initialState,
   reducers: {
-    addTodo: () => {},
-    setSelectedName(state, action: PayloadAction<string>) {
-      state.selectedName = action.payload;
-    },
-    setFormData(state, action: PayloadAction<FormData>) {
-      state.formData = action.payload;
-    },
-    updateFormField(state, action: PayloadAction<{ field: keyof FormData; value: string }>) {
-      const { field, value } = action.payload;
-      state.formData[field] = value;
-    },
-      addItem(state, action: PayloadAction<Item>) {
-      state.items.push(action.payload);
-    },
-    resetItems(state) {
-      state.items = [];
+   
     },
   },
 });
 
 
 
-export const { setSelectedName, setFormData, updateFormField, addItem, resetItems,addTodo } = invoiceFieldsSlice.actions;
 export default invoiceFieldsSlice.reducer;
