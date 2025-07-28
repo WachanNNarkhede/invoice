@@ -1,127 +1,65 @@
 
 import Button from '@mui/material/Button'
 import './App.css'
-
-// Define the Item type
-type Item = {
-  id: number;
-  name: string;
-  quantity: number;
-  price: number;
-};
 import { Container, FormControl, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, Typography, InputLabel, TextField, Box, type SelectChangeEvent } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from './app/hooks';
-import { setSelectedName, setFormData ,updateFormField,updatetotalbill}  from './app/slices/nvoicefiels';
+import { setSelectedName, setFormData, updateFormField, addItem }  from './app/slices/nvoicefiels';
 import Userdata from './data/user.json';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 
 
 
-function Taxxt() {
-  const dispatch  = useDispatch();
-  const {selectedName ,formData,grandtotal } = useAppSelector((state)=>state.invoiceFields)
-const handledropdown = (event: SelectChangeEvent<string> ) => {
-const name = event.target.value ;
-const namedata= Userdata.find((u) => u.name === name);
-//  expression true false return
- dispatch(setSelectedName(name)); //redux ko bol diya ki selected name update kar do 
- if(namedata){
- dispatch(setFormData({
-   invoiceNumber: namedata?.invoiceNumber, 
-  mobile: namedata?.mobile,
-  address: namedata?.address,
-  date:   namedata?.date,
-  gender:   namedata?.gender,
-  age:   namedata?.age,
- }))
- }else{
- dispatch(setFormData({
-   invoiceNumber: '', 
+
+
+
+function Taxtxt() {
+ const dispatch = useDispatch();
+ const {selectedName, formData, items} = useAppSelector((state)=>state.invoiceFields);
+
+const handledropdown = (event:SelectChangeEvent<string> ) => {
+const name = event.target.value; 
+dispatch(setSelectedName(name));
+const namecompare =  Userdata.find((u)=>u.name===name);
+if(namecompare){
+dispatch(setFormData({
+    invoiceNumber: namecompare?.invoiceNumber, 
+  mobile: namecompare?.mobile,
+  address: namecompare?.address,
+  date: namecompare?.date,
+  gender: namecompare?.gender,
+  age: namecompare?.age
+}))
+}else{
+
+  dispatch(setFormData({
+    invoiceNumber: '', 
   mobile: '',
   address: '',
-  date:   '',
-  gender:   '',
-  age:   '',
- }))
- }
-  
+  date: '',
+  gender: '',
+  age: ''
+}))
 }
 
-const handeltextchange =(field : keyof typeof formData  ,value : string)=>{
-  
-  dispatch(updateFormField({field,value}))
-}
+};
 
 
-//
+
+const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = event.target;
+  dispatch(updateFormField({ field: name as keyof typeof formData, value  }));
+};
 
 
-const [newItem, setNewItem] = useState({ name: '', quantity: '', price: '' });
+const handleAddItem = () => {
 
-  // State for the list of items in the table
-  const [items, setItems] = useState<Item[]>([]);
-
-  useEffect(() => {
-  dispatch(updatetotalbill(calculateGrandTotal()));
-}, [items,dispatch]);
-  // Handle changes to the item input fields
-  const handleNewItemChange = (field: 'name' | 'quantity' | 'price', value: string) => {
-    setNewItem({ ...newItem, [field]: value });
-  };
-
-  // Add a new item to the table
-  const addItemToTable = () => {
-    if (newItem.name && newItem.quantity && newItem.price) {
-      setItems([
-        ...items,
-        {
-          id: items.length + 1, // Simple ID based on array length
-          name: newItem.name,
-          quantity: Number(newItem.quantity), // Convert string to number
-          price: Number(newItem.price), // Convert string to number
-        },
-      ]);
-      setNewItem({ name: '', quantity: '', price: '' }); // Clear the input fields
-    }
-  };
-
-  // Calculate the grand total (subtotal + 18% GST)
-  const calculateGrandTotal = () => {
-    const subtotal = items.reduce((sum, item) => sum + item.quantity * item.price, 0);
-    const gst = subtotal * 0.18; // 18% GST
-    return (subtotal + gst).toFixed(2); // Round to 2 decimal places
-  };
-
-  // Handle submit button click
-  const handleSubmit = () => {
-    if (items.length > 0) {
-      // Create a new bill object
-      const newBill = {
-        items,
-        grandTotal: calculateGrandTotal() || grandtotal,
-        timestamp: new Date().toISOString(),
-      };
-      // Save to console (you can add localStorage later if needed)
-      console.log('Saved Bill:', newBill);
-      // Clear the table
-      setItems([]);
-      setNewItem({ name: '', quantity: '', price: '' });
-    } else {
-      console.log('Please add at least one item.');
-    }
-  };
-  const handeltotalchange=(event: React.ChangeEvent<HTMLInputElement>)=>{
-    
-   const value= event.target.value;
-   if(value === '' || /^\d*\.?\d*$/.test(value)){
-    dispatch(updatetotalbill(value))
-   }
-  }
+};
 
   return (
     <div className="App" >
+
       
 
 
@@ -148,22 +86,21 @@ const [newItem, setNewItem] = useState({ name: '', quantity: '', price: '' });
         </Select>
       </FormControl>
       <TextField
+      name="invoiceNumber"
         id="outlined-basic"
         label="Invoice Number"
         variant="outlined"
         sx={{ m: 1, minWidth: 120 }}
-        value={formData.invoiceNumber}
-         onChange={(event)=>handeltextchange('invoiceNumber', event.target.value)}
+         value={formData.invoiceNumber}
+  onChange={handleTextChange}
       />
-      
       
       <TextField
         id="outlined-basic"
         label="Mobile Number"
         variant="outlined"
         sx={{ m: 1, minWidth: 120 }}
-        value={formData.mobile}
-        onChange={(event)=>{handeltextchange('mobile', event.target.value)}}
+      value={formData.mobile}
       />
       <TextField
         id="outlined-basic"
@@ -171,122 +108,100 @@ const [newItem, setNewItem] = useState({ name: '', quantity: '', price: '' });
         variant="outlined"
         sx={{ m: 1, minWidth: 120 }}
         value={formData.address}
-        onChange={(event)=>handeltextchange('address', event.target.value)}
       />
       <TextField
         id="outlined-basic"
         label="Date"
         variant="outlined"
         sx={{ m: 1, minWidth: 120 }}
-        value={formData.date}
       />
       <TextField
         id="outlined-basic"
         label="Gender"
         variant="outlined"
         sx={{ m: 1, minWidth: 120 }}
-        value={formData.gender}
       />
       <TextField
         id="outlined-basic"
         label="Age"
         variant="outlined"
         sx={{ m: 1, minWidth: 120 }}
-        value={formData.age}
       />
       </Container>
 
 
       
-<Container style={{ backgroundColor: '#f0f0f0', padding: '20px', marginTop: '20px' }}>
-        <Typography variant="h5">Items Table</Typography>
 
+          <Container
+      maxWidth="lg"
+      sx={{
+        bgcolor: 'grey.200',
+        py: 4,
+        borderRadius: 2,
+        border: '2px solid #ccc',
+        height: '50vh',
+        overflow: 'hidden',
+      }}
+    >
+      <Typography variant="h5" gutterBottom>
+        Items Selected Table
+      </Typography>
+
+      <Table sx={{ border: '1px solid #ccc' }}>
+        <TableHead>
+          <TableRow> 
+            <TableCell><strong>Item</strong></TableCell>
+            <TableCell><strong>Quantity</strong></TableCell>
+            <TableCell><strong>Price</strong></TableCell>
+                        <TableCell><strong>Total Price</strong></TableCell>
+                                    <TableCell><strong>GST (18%)</strong></TableCell>
+
+
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell><TextField id="outlined-basic" label="Item 1" variant="outlined" size='small' sx={{ m: 1, Width: 50 }} /></TableCell>
+            <TableCell><TextField id="outlined-basic" label="Quantity 1" variant="outlined" size='small' sx={{ m: 1, Width: 50 }} /></TableCell>
+            <TableCell><TextField id="outlined-basic" label="Price 1" variant="outlined" size='small' sx={{ m: 1, Width: 50 }} /></TableCell>
+            <TableCell></TableCell>
+            <TableCell><Button variant="contained" onClick={handleAddItem} color="primary">Add Item </Button></TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Item 2</TableCell>
+            <TableCell>Quantity 2</TableCell>
+            <TableCell>Price 2</TableCell>
+            <TableCell>Total</TableCell>
+            <TableCell>Gst</TableCell>
+          </TableRow>
         
+          <TextField
+        id="outlined-basic"
+        label="Total with GST"
+        variant="outlined"
+        size='small'
+        sx={{ m: 1, mt: 2, transform: 'translateX(320%)', minWidth: 50,height: 50, width: 150 
+         }}
+      />
+        </TableBody>
+      </Table>
+    </Container>
 
-        {/* Table to display items */}
-        <Table style={{ border: '1px solid #ccc' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell><strong>Item</strong></TableCell>
-              <TableCell><strong>Quantity</strong></TableCell>
-              <TableCell><strong>Price</strong></TableCell>
-              <TableCell><strong>Total</strong></TableCell>
-              <TableCell><strong>GST (18%)</strong></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-                
-            {items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.quantity}</TableCell>
-                <TableCell>{item.price}</TableCell>
-                <TableCell>{(item.quantity * item.price).toFixed(2)}</TableCell>
-                <TableCell>{(item.quantity * item.price * 0.18).toFixed(2)}</TableCell>
-              </TableRow>
-            ))}
-               <TableRow>
-              <TableCell>   <TextField
-            label="Item Name"
-            value={newItem.name}
-            onChange={(e) => handleNewItemChange('name', e.target.value)}
-            style={{ width: '150px' }}
-          /></TableCell>
-              
-              <TableCell> <TextField
-            label="Quantity"
-            type="number"
-            value={newItem.quantity}
-            onChange={(e) => handleNewItemChange('quantity', e.target.value)}
-            style={{ width: '100px' }}
-          /></TableCell>
-              <TableCell> <TextField
-            label="Price"
-            type="number"
-            value={newItem.price}
-            onChange={(e) => handleNewItemChange('price', e.target.value)}
-            style={{ width: '100px' }}
-          /></TableCell>
-          <TableCell></TableCell>
-              <TableCell>
-                 <Button variant="contained" color="primary" onClick={addItemToTable}>
-            Add Item
-          </Button>
-              </TableCell>
-            </TableRow>
+    <Box fontSize={60} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 ,mr: 40 }}>
+      <Button size='large' variant="contained" color="primary">
+        
+        Submit
 
-            {items.length > 0 && (
-              <TableRow>
-                <TableCell colSpan={4} style={{ textAlign: 'right' }}>
-                  <TextField
-                  name='grandTotal'
-                    label="Total with GST"
-                    value={grandtotal}
-                    type="number"
-                    style={{ width: '150px', margin: '10px' }}
-                    onChange={handeltotalchange}
-                  />
-                </TableCell>
-                <TableCell />
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </Container>
-
-      {/* Submit Button */}
-      <Box style={{ display: 'flex', justifyContent: 'flex-end', margin: '20px' }}>
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          Submit
-        </Button>
-      </Box>
-    </div>
-  );
+      </Button>
+    </Box>
+    
+  </div>
+  )
 }
 
-export default Taxxt
+export default Taxtxt
 
-//// src/App.tsx
+
 // import Button from '@mui/material/Button';
 // import { Container, FormControl, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, Typography, TextField, Box } from '@mui/material';
 // import { type SelectChangeEvent } from '@mui/material/Select'; // Use SelectChangeEvent
@@ -468,4 +383,4 @@ export default Taxxt
 //   );
 // }
 
-// export default App
+// export default App;

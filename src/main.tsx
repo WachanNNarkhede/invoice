@@ -7,6 +7,7 @@ import { store } from './app/store.ts'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Bills from './Bill.tsx';
 import Taxxt from './taxt.tsx'
+import Taxtxt from './txtxtx.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/" element={<App />} />
           <Route path="/bills/:username" element={<Bills />} />
           <Route path="/taxt" element={<Taxxt />} />
+          <Route path="/txtxt" element={<Taxtxt />} />
         </Routes>
       </BrowserRouter>
     </Provider>
