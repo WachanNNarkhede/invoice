@@ -1,7 +1,7 @@
 // src/slices/invoiceFields/index.ts
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-interface FormData {
+export interface FormData {
   invoiceNumber: string;
   mobile: string;
   address: string;
@@ -10,13 +10,13 @@ interface FormData {
   age: string;
 }
 
-interface Item {
+export interface Item {
   id: number;
   name: string;
   quantity: number;
   price: number;
 }
-interface InvoiceState {
+export interface InvoiceState {
   selectedName: string;
   formData: FormData;
   items: Item[];
