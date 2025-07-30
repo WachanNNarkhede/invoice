@@ -63,12 +63,13 @@ function Taxtxt() {
     }
   };
 
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    dispatch(updateFormField({ field: name as keyof typeof formData, value }));
+const handleFieldChange = (field: keyof typeof formData, value: string) => {
+    dispatch(updateFormField({ field, value }));
   };
 
-  const [items, setItems] = useState({ itemame: "", price: "", quantity: "" });
+
+
+  const [items, setItems] = useState({  itemame: "", price: "", quantity: "" });
 
   const [listItems, setListItems] = useState<Item[]>([]);
 
@@ -76,14 +77,13 @@ function Taxtxt() {
     setItems({ ...items, [field]: value });
   };
 
-  //wheneven we want to  make changes in json object we use [] for keys
 
   const handleAddItem = () => {
     if (items.itemame && items.price && items.quantity) {
       setListItems([
         ...listItems,
         {
-          id: listItems.length + 1, //table
+          id: listItems.length + 1,
           name: items.itemame,
           quantity: Number(items.quantity),
           price: Number(items.price),
@@ -110,13 +110,12 @@ useEffect(() => {
   const handleSubmit = () => {
     if (selectedName && listItems.length > 0) {
       
-      const existingBills = JSON.parse(
-        localStorage.getItem('bills' ) || "[]"
-      );
+    
+
 
       localStorage.setItem(
         'bills' ,
-        JSON.stringify([...existingBills, { listItems, formData, grandtotal }])
+        JSON.stringify([{ listItems, formData, grandtotal }])
       );
        setListItems([]);
       console.log("Saved Bill:", { listItems, formData, grandtotal });
@@ -153,13 +152,12 @@ useEffect(() => {
           </Select>
         </FormControl>
         <TextField
-          name="invoiceNumber"
           id="outlined-basic"
           label="Invoice Number"
           variant="outlined"
           sx={{ m: 1, minWidth: 120 }}
           value={formData.invoiceNumber}
-          onChange={handleTextChange}
+          onChange={(e) => handleFieldChange("invoiceNumber", e.target.value)}
         />
 
         <TextField
@@ -175,7 +173,7 @@ useEffect(() => {
           variant="outlined"
           sx={{ m: 1, minWidth: 120 }}
           value={formData.address}
-          onChange={handleTextChange}
+        onChange={(e)=>handleFieldChange("address",e.target.value)}
         />
         <TextField
           id="outlined-basic"
@@ -183,7 +181,7 @@ useEffect(() => {
           variant="outlined"
           sx={{ m: 1, minWidth: 120 }}
           value={formData.date}
-          onChange={handleTextChange}
+          onChange={(e) => handleFieldChange("date", e.target.value)}
         />
         <TextField
           id="outlined-basic"
@@ -191,7 +189,7 @@ useEffect(() => {
           variant="outlined"
           sx={{ m: 1, minWidth: 120 }}
           value={formData.gender}
-          onChange={handleTextChange}
+          onChange={(e) => handleFieldChange("gender", e.target.value)}
         />
         <TextField
           id="outlined-basic"
@@ -199,7 +197,7 @@ useEffect(() => {
           variant="outlined"
           sx={{ m: 1, minWidth: 120 }}
           value={formData.age}
-          onChange={handleTextChange}
+          onChange={(e) => handleFieldChange("age", e.target.value)}
         />
       </Container>
 
