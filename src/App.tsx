@@ -1,13 +1,13 @@
 // import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
 import './App.css'
-import Taxtxt from './Invoice'
+import Invoicepage from './Invoice'
 
 function App() {
 
   return (
    <>
-   <Taxtxt />
+   <Invoicepage />
    </>
   )
 }

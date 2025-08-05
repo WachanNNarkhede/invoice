@@ -1,5 +1,5 @@
 // src/slices/invoiceFields/index.ts
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface FormData {
   invoiceNumber: string;
@@ -11,10 +11,11 @@ export interface FormData {
 }
 
 export interface Item {
+  gst: number | string;
   id: number;
-  name: string;
-  quantity: number;
-  price: number;
+  name: string ;
+  quantity: number | string;
+  price: number | string;
 }
 export interface InvoiceState {
   selectedName: string;
@@ -23,53 +24,48 @@ export interface InvoiceState {
   grandtotal: string;
 }
 
-
-
 const initialState: InvoiceState = {
-  selectedName: '',
+  selectedName: "",
   formData: {
-    invoiceNumber: '',
-    mobile: '',
-    address: '',
-    date: '',
-    gender: '',
-    age: '',
-},
-  items: [], 
-  grandtotal: '0.00'
+    invoiceNumber: "",
+    mobile: "",
+    address: "",
+    date: "",
+    gender: "",
+    age: "",
+  },
+  items: [],
+  grandtotal: "0.00",
 };
 
-
-
 const invoiceFieldsSlice = createSlice({
-  name: 'invoiceFields',
+  name: "invoiceFields",
   initialState,
   reducers: {
-    addTodo: () => {},
     setSelectedName(state, action: PayloadAction<string>) {
       state.selectedName = action.payload;
     },
     setFormData(state, action: PayloadAction<FormData>) {
       state.formData = action.payload;
     },
-    updateFormField(state, action: PayloadAction<{ field: keyof FormData; value: string }>) {
+    updateFormField(
+      state,
+      action: PayloadAction<{ field: keyof FormData; value: string }>
+    ) {
       const { field, value } = action.payload;
       state.formData[field] = value;
-    },  
-    
-      addItem(state, action: PayloadAction<Item>) {
-state.items = [...state.items, action.payload];    },
-    resetItems(state) {
-      state.items = [];
-      
     },
+
     updatetotalbill(state, action: PayloadAction<string>) {
       state.grandtotal = action.payload;
-    }
+    },
   },
 });
 
-
-
-export const { setSelectedName, setFormData, updateFormField, addItem, resetItems,updatetotalbill } = invoiceFieldsSlice.actions;
+export const {
+  setSelectedName,
+  setFormData,
+  updateFormField,
+  updatetotalbill,
+} = invoiceFieldsSlice.actions;
 export default invoiceFieldsSlice.reducer;

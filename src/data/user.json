@@ -1,7 +1,7 @@
 [
   {
     "name": "Person 1",
-    "invoiceNumber": "INV001",
+    "invoiceNumber": "001",
     "mobile": "1234567890",
     "address": "123 Main St, City A",
     "date": "2025-07-25",
@@ -10,7 +10,7 @@
   },
   {
     "name": "Person 2",
-    "invoiceNumber": "INV002",
+    "invoiceNumber": "002",
     "mobile": "0987654321",
     "address": "456 Elm St, City B",
     "date": "2025-07-24",
@@ -19,7 +19,7 @@
   },
   {
     "name": "Person 3",
-    "invoiceNumber": "INV003",
+    "invoiceNumber": "003",
     "mobile": "5555555555",
     "address": "789 Oak St, City C",
     "date": "2025-07-23",

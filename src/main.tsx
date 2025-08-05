@@ -5,10 +5,8 @@ import App from './App.tsx'
 import { Provider } from 'react-redux'
 import { store } from './app/store.ts'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-// import Bills from './Bill.tsx';
-// import Taxxt from './taxt.tsx'
-import Taxtxt from './Invoice.tsx'
-import TxtBill from './bill.tsx'
+import Bill from './Bill.tsx'
+import Invoicepage from './Invoice.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -17,13 +15,10 @@ createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
-          {/* <Route path="/bills/:usernamee" element={<Bills />} />
-          <Route path="/taxt" element={<Taxxt />} /> */}
-          <Route path="/txtxt" element={<Taxtxt />} />
-          <Route path="/txtbill" element={<TxtBill />} />
-                 
+          <Route path="/bill" element={<Bill />} />    
+          <Route path='/invoicepage'    element={<Invoicepage/>}  />
         </Routes>
       </BrowserRouter>
     </Provider>
-  </StrictMode>,
+  </StrictMode>
 )
