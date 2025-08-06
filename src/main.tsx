@@ -5,8 +5,8 @@ import App from './App.tsx'
 import { Provider } from 'react-redux'
 import { store } from './app/store.ts'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Bill from './Bill.tsx'
-import Invoicepage from './Invoice.tsx'
+import Bill from './pages/Bill.tsx'
+// import Invoicepage from './pages/Invoice.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -16,7 +16,7 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/bill" element={<Bill />} />    
-          <Route path='/invoicepage'    element={<Invoicepage/>}  />
+          {/* <Route path='/invoicepage'    element={<Invoicepage/>}  /> */}
         </Routes>
       </BrowserRouter>
     </Provider>

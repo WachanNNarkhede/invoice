@@ -1,4 +1,3 @@
-// src/slices/invoiceFields/index.ts
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface FormData {
@@ -56,6 +55,7 @@ const invoiceFieldsSlice = createSlice({
       state.formData[field] = value;
     },
 
+
     updatetotalbill(state, action: PayloadAction<string>) {
       state.grandtotal = action.payload;
     },
@@ -69,3 +69,4 @@ export const {
   updatetotalbill,
 } = invoiceFieldsSlice.actions;
 export default invoiceFieldsSlice.reducer;
+// export const {} = invoiceFieldsSlice.actions

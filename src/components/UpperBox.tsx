@@ -1,10 +1,10 @@
  
   import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography, type SelectChangeEvent } from '@mui/material'
 import React from 'react'
-import { useAppSelector } from './app/hooks';
+import { useAppSelector } from '../app/hooks';
 import { useDispatch } from 'react-redux';
-import { setFormData, setSelectedName, updateFormField } from './app/slices/nvoicefiels';
-import Userdata from './data/user.json';
+import { setFormData, setSelectedName, updateFormField } from '../app/slices/nvoicefiels';
+import Userdata from '../data/user.json';
 import { Link } from 'react-router-dom';
   
   const UpperBox = () => {
@@ -14,7 +14,7 @@ const dispatch = useDispatch();
   );
 
 
-      const handledropdown = (event: SelectChangeEvent<string>) => {
+      const handledropdownautofill = (event: SelectChangeEvent<string>) => {
 
         const name = event.target.value;
         dispatch(setSelectedName(name));
@@ -80,7 +80,7 @@ const dispatch = useDispatch();
           id="demo-simple-select"
           label="Name"
           value={selectedName}
-          onChange={handledropdown}
+          onChange={handledropdownautofill}
         >
           <MenuItem value="Person 1">ACC</MenuItem>
           <MenuItem value="Person 2">ABB</MenuItem>

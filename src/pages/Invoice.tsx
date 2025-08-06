@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
-import "./App.css";
-import { type Item } from "./app/slices/nvoicefiels";
+import "../App.css"
+import { type Item } from "../app/slices/nvoicefiels";
 import {
   Container,
   FormControl,
@@ -17,16 +17,14 @@ import {
   Box,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { useAppSelector } from "./app/hooks";
+import { useAppSelector } from "../app/hooks";
 import {
   setSelectedName,
   setFormData,
   updatetotalbill,
-} from "./app/slices/nvoicefiels";
-// import Userdata from "./data/user.json";
+} from "../app/slices/nvoicefiels";
 import { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
-import UpperBox from "./UpperBox";
+import UpperBox from "../components/UpperBox";
 
 function Invoicepage() {
   const dispatch = useDispatch();
@@ -40,7 +38,7 @@ function Invoicepage() {
     itemame: "",
     price: "",
     quantity: "",
-    gst: "", // make gst editable
+    gst: "",     
   });
 
   useEffect(() => {
@@ -54,9 +52,10 @@ function Invoicepage() {
 
   const [listItems, setListItems] = useState<Item[]>([]);
 
-  const handleItemCHange = (field: keyof typeof items, value: string) => {
+  const handleItemsaveinrow = (field: keyof typeof items, value: string) => {
     setItems({ ...items, [field]: value });
   };
+
 
   //wheneven we want to  make changes in json object we use [] for keys
 
@@ -65,7 +64,7 @@ function Invoicepage() {
       setListItems([
         ...listItems,
         {
-          id: listItems.length + 1, //table
+          id: listItems.length + 1, 
           name: items.itemame,
           quantity: Number(items.quantity),
           price: Number(items.price),
@@ -78,12 +77,9 @@ function Invoicepage() {
     console.log(listItems);
 
     setItems({
-      itemame: "",
-      price: "",
-      quantity: "",
-      gst: "",
+      itemame: "",  price: "", quantity: "", gst: "",
     });
-    //row
+  
   };
 
   const grandtotal = listItems.reduce(
@@ -103,16 +99,7 @@ function Invoicepage() {
   // 1.18 also
 
   const handleSubmit = () => {
-    if (
-      selectedName &&
-      listItems.length &&
-      formData.address &&
-      formData.date &&
-      formData.gender &&
-      formData.age &&
-      formData.invoiceNumber &&
-      formData.mobile &&
-      grandtotal > 0
+    if ( selectedName && listItems.length && formData.address && formData.date && formData.gender && formData.age &&formData.invoiceNumber &&formData.mobile && grandtotal > 0
     ) {
       let existingBills;
 
@@ -121,7 +108,7 @@ function Invoicepage() {
         existingBills = Array.isArray(stored) ? stored : [];
       } catch (error) {
         existingBills = [];
-        console.log(error); // fallback if JSON parse fails
+        console.log(error); 
       }
 
       const newBill = { listItems, formData, grandtotal };
@@ -165,10 +152,16 @@ function Invoicepage() {
       const newitem = [...currentavalable];
       const innerarrayvalue = { ...newitem[index] };
 
+      // if(field === "itemame") {
+      // if (value === "") {items.itemame = "";
+      //   } else {
+      //     items.itemame = value;
+      //   }
+      // }
       if (field === "price") {
       if (value === "") {items.price = "";
         } else {
-          items.price = value;
+          innerarrayvalue.price = value;
         }
       }
       if (field === "quantity") {
@@ -185,6 +178,7 @@ function Invoicepage() {
       return newitem;
     });
   };
+
 
   return (
     <div className="App">
@@ -290,10 +284,10 @@ function Invoicepage() {
                     labelId="itemame-label"
                     id="itemame"
                     name="itemame"
-                    value={items.itemame} // controlled value
+                    value={items.itemame} 
                     label="Item Name"
                     onChange={(event) =>
-                      handleItemCHange("itemame", event.target.value)
+                      handleItemsaveinrow("itemame", event.target.value)
                     }
                   >
                     <MenuItem value="Item 1">Item 1</MenuItem>
@@ -305,13 +299,13 @@ function Invoicepage() {
               <TableCell>
                 <TextField
                   id="outlined-basic"
-                  label="Quantity 1"
+                  label="Quantity "
                   variant="outlined"
                   size="small"
                   sx={{ m: 1, Width: 50 }}
                   value={items.quantity}
                   onChange={(event) =>
-                    handleItemCHange("quantity", event.target.value)
+                    handleItemsaveinrow("quantity", event.target.value)
                   }
                   type="number"
                 />
@@ -325,7 +319,7 @@ function Invoicepage() {
                   sx={{ m: 1, Width: 50 }}
                   value={items.price}
                   onChange={(event) =>
-                    handleItemCHange("price", event.target.value)
+                    handleItemsaveinrow("price", event.target.value)
                   }
                   type="number"
                 />
@@ -339,7 +333,7 @@ function Invoicepage() {
                   label="GST"
                   value={items.gst}
                   onChange={(event) =>
-                    handleItemCHange("gst", event.target.value)
+                    handleItemsaveinrow("gst", event.target.value)
                   }
                   type="number"
                 />

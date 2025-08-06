@@ -1,7 +1,6 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
+
 import './App.css'
-import Invoicepage from './Invoice'
+import Invoicepage from './pages/Invoice'
 
 function App() {
 

@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import type { Item, FormData } from "./app/slices/nvoicefiels";
+import type { Item, FormData } from "../app/slices/nvoicefiels";
 
 interface BillsProps {
   listItems: Item[];
@@ -111,7 +111,6 @@ const Bill = () => {
                             <strong>Quantity</strong>
                           </TableCell>
                           <TableCell sx={{ textAlign: "center" }}>
-                            <strong>Total</strong>
                           </TableCell>
                           <TableCell sx={{ textAlign: "center" }}>
                             <strong>GST</strong>
