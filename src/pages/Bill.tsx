@@ -74,74 +74,92 @@ const Bill = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.entries(localdata).map(([key, value]: [string, BillsProps]) => (
-            <>
-              <TableRow key={key}>
-                <TableCell>{value.formData.invoiceNumber}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{value.formData.mobile}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{value.formData.address}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{value.formData.date}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{value.formData.gender}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{value.formData.age}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
-                  <Button onClick={() => handleToggleItems(key)}>
-                    {openDropdown === key ? "Hide Items" : "View Items"}
-                  </Button>
-                </TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
-                  <strong>{value.grandtotal}</strong>
-                </TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
-                  <Button onClick={() => handledelete(key)}>Delete</Button>
-                </TableCell>
-              </TableRow>
-              {openDropdown === key && (
-                <TableRow>
-                  <TableCell colSpan={9} sx={{ padding: 0 }}>
-                    <Table sx={{ border: "1px solid #e0e0e0", margin: "10px 0" }}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>
-                            <strong>Item Name</strong>
-                          </TableCell>
-                          <TableCell sx={{ textAlign: "center" }}>
-                            <strong>Price</strong>
-                          </TableCell>
-                          <TableCell sx={{ textAlign: "center" }}>
-                            <strong>Quantity</strong>
-                          </TableCell>
-                          <TableCell sx={{ textAlign: "center" }}>
-                          </TableCell>
-                          <TableCell sx={{ textAlign: "center" }}>
-                            <strong>GST</strong>
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {value.listItems.map((item) => (
-                          <TableRow key={item.id}>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell sx={{ textAlign: "center" }}>  
-                              {(Number(item.price)).toFixed(2)}
-                            </TableCell>
-                            <TableCell sx={{ textAlign: "center" }}>
-                              {(Number(item.quantity)).toFixed(2)}
-                            </TableCell>
-                            <TableCell sx={{ textAlign: "center" }}>
-                              {(Number(item.price) * Number(item.quantity)).toFixed(2)}
-                            </TableCell>
-                            <TableCell sx={{ textAlign: "center" }}>
-                              {Number(item.gst).toFixed(2)}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+          {Object.entries(localdata).map(
+            ([key, value]: [string, BillsProps]) => (
+              <>
+                <TableRow key={key}>
+                  <TableCell>{value.formData.invoiceNumber}</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    {value.formData.mobile}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    {value.formData.address}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    {value.formData.date}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    {value.formData.gender}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    {value.formData.age}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    <Button onClick={() => handleToggleItems(key)}>
+                      {openDropdown === key ? "Hide Items" : "View Items"}
+                    </Button>
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    <strong>{value.grandtotal}</strong>
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    <Button onClick={() => handledelete(key)}>Delete</Button>
                   </TableCell>
                 </TableRow>
-              )}
-            </>
-          ))}
+                {openDropdown === key && (
+                  <TableRow>
+                    <TableCell colSpan={9} sx={{ padding: 0 }}>
+                      <Table
+                        sx={{ border: "1px solid #e0e0e0", margin: "10px 0" }}
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>
+                              <strong>Item Name</strong>
+                            </TableCell>
+                            <TableCell sx={{ textAlign: "center" }}>
+                              <strong>Price</strong>
+                            </TableCell>
+                            <TableCell sx={{ textAlign: "center" }}>
+                              <strong>Quantity</strong>
+                            </TableCell>
+                            <TableCell sx={{ textAlign: "center" }}>
+                              {" "}
+                              Total
+                            </TableCell>
+                            <TableCell sx={{ textAlign: "center" }}>
+                              <strong>GST</strong>
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {value.listItems.map((item) => (
+                            <TableRow key={item.id}>
+                              <TableCell>{item.name}</TableCell>
+                              <TableCell sx={{ textAlign: "center" }}>
+                                {Number(item.price).toFixed(2)}
+                              </TableCell>
+                              <TableCell sx={{ textAlign: "center" }}>
+                                {Number(item.quantity).toFixed(2)}
+                              </TableCell>
+                              <TableCell sx={{ textAlign: "center" }}>
+                                {(
+                                  Number(item.price) * Number(item.quantity)
+                                ).toFixed(2)}
+                              </TableCell>
+                              <TableCell sx={{ textAlign: "center" }}>
+                                {Number(item.gst).toFixed(2)}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
+            )
+          )}
         </TableBody>
       </Table>
     </div>

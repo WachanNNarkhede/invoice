@@ -60,11 +60,11 @@ function Invoicepage() {
   //wheneven we want to  make changes in json object we use [] for keys
 
   const handleAddItem = () => {
-    if (items.itemame && items.price && items.quantity) {
+    if (items.itemame && items.price && items.quantity ) {
       setListItems([
         ...listItems,
         {
-          id: listItems.length + 1, 
+          id: Date.now(), 
           name: items.itemame,
           quantity: Number(items.quantity),
           price: Number(items.price),
@@ -132,7 +132,7 @@ function Invoicepage() {
       console.log("Saved Bill:", newBill);
       dispatch(setSelectedName(""));
     } else {
-      console.log("Please select a user and add at least one item.");
+      console.log(" error");
     }
   };
 
@@ -152,14 +152,14 @@ function Invoicepage() {
       const newitem = [...currentavalable];
       const innerarrayvalue = { ...newitem[index] };
 
-      // if(field === "itemame") {
-      // if (value === "") {items.itemame = "";
-      //   } else {
-      //     items.itemame = value;
-      //   }
-      // }
+      if(field === "itemame") {
+      if (value === "") {items.itemame = "";
+        } else {
+          items.itemame = value;
+        }
+      }
       if (field === "price") {
-      if (value === "") {items.price = "";
+      if (value === " ") {items.price = "";
         } else {
           innerarrayvalue.price = value;
         }
@@ -179,6 +179,8 @@ function Invoicepage() {
     });
   };
 
+
+  
 
   return (
     <div className="App">

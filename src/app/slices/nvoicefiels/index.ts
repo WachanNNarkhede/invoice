@@ -15,12 +15,14 @@ export interface Item {
   name: string ;
   quantity: number | string;
   price: number | string;
+
+  
 }
 export interface InvoiceState {
   selectedName: string;
   formData: FormData;
-  items: Item[];
   grandtotal: string;
+  count: number;
 }
 
 const initialState: InvoiceState = {
@@ -33,8 +35,8 @@ const initialState: InvoiceState = {
     gender: "",
     age: "",
   },
-  items: [],
   grandtotal: "0.00",
+  count: 0,
 };
 
 const invoiceFieldsSlice = createSlice({
@@ -54,6 +56,10 @@ const invoiceFieldsSlice = createSlice({
       const { field, value } = action.payload;
       state.formData[field] = value;
     },
+   
+updateCount(state, action: PayloadAction<number>) {
+      state.count = action.payload;
+    },
 
 
     updatetotalbill(state, action: PayloadAction<string>) {
@@ -67,6 +73,6 @@ export const {
   setFormData,
   updateFormField,
   updatetotalbill,
+  updateCount
 } = invoiceFieldsSlice.actions;
-export default invoiceFieldsSlice.reducer;
-// export const {} = invoiceFieldsSlice.actions
+export default invoiceFieldsSlice.reducer;  

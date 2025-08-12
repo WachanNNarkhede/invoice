@@ -1,11 +1,11 @@
  
-  import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography, type SelectChangeEvent } from '@mui/material'
-import React from 'react'
+import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography, type SelectChangeEvent } from '@mui/material'
 import { useAppSelector } from '../app/hooks';
 import { useDispatch } from 'react-redux';
 import { setFormData, setSelectedName, updateFormField } from '../app/slices/nvoicefiels';
 import Userdata from '../data/user.json';
 import { Link } from 'react-router-dom';
+
   
   const UpperBox = () => {
 const dispatch = useDispatch();
@@ -13,8 +13,8 @@ const dispatch = useDispatch();
     (state) => state.invoiceFields
   );
 
-
       const handledropdownautofill = (event: SelectChangeEvent<string>) => {
+            
 
         const name = event.target.value;
         dispatch(setSelectedName(name));
@@ -22,6 +22,7 @@ const dispatch = useDispatch();
         if (namecompare) {
           dispatch(
             setFormData({
+              
               invoiceNumber: namecompare?.invoiceNumber,
               mobile: namecompare?.mobile,
               address: namecompare?.address,
@@ -33,6 +34,7 @@ const dispatch = useDispatch();
         } else {
           dispatch(
             setFormData({
+                                           
               invoiceNumber: "",
               mobile: "",
               address: "",
@@ -42,12 +44,12 @@ const dispatch = useDispatch();
             })
           );
         }
-      };
+      };                                    
         const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           const { name, value } = event.target;
           dispatch(updateFormField({ field: name as keyof typeof formData, value }));
         };
-
+                
     return (
       <div>
         <Container
@@ -63,7 +65,6 @@ const dispatch = useDispatch();
   <Typography variant="h4" align="center" gutterBottom>
     Invoice Form
   </Typography>
-
   <Box
     sx={{
       display: "flex",
@@ -82,9 +83,10 @@ const dispatch = useDispatch();
           value={selectedName}
           onChange={handledropdownautofill}
         >
-          <MenuItem value="Person 1">ACC</MenuItem>
-          <MenuItem value="Person 2">ABB</MenuItem>
-          <MenuItem value="Person 3">ADD</MenuItem>
+
+          {Userdata.map((user)=>( <MenuItem  value={user.name} > {user.name} </MenuItem>))}
+
+          
         </Select>
       </FormControl>
     </Box>
@@ -104,7 +106,8 @@ const dispatch = useDispatch();
       <TextField
         id="outlined-basic"
         name="mobile"
- type="number"        label="Mobile Number"
+ type="number"       
+  label="Mobile Number"
         variant="outlined"
         fullWidth
         value={formData.mobile}
