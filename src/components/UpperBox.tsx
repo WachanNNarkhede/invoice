@@ -1,5 +1,5 @@
  
-import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography, type SelectChangeEvent } from '@mui/material'
+import { Autocomplete, Box, Button, Container, FormControl, InputLabel, TextField, Typography,  } from '@mui/material'
 import { useAppSelector } from '../app/hooks';
 import { useDispatch } from 'react-redux';
 import { setFormData, setSelectedName, updateFormField } from '../app/slices/nvoicefiels';
@@ -13,40 +13,72 @@ const dispatch = useDispatch();
     (state) => state.invoiceFields
   );
 
-      const handledropdownautofill = (event: SelectChangeEvent<string>) => {
+      // const handledropdownautofill = (event: SelectChangeEvent<string>) => {
             
 
-        const name = event.target.value;
-        dispatch(setSelectedName(name));
-        const namecompare = Userdata.find((u) => u.name === name);
-        if (namecompare) {
-          dispatch(
-            setFormData({
+      //   const name = event.target.value;
+      //   dispatch(setSelectedName(name));
+      //   const namecompare = Userdata.find((u) => u.name === name);
+      //   if (namecompare) {
+      //     dispatch(
+      //       setFormData({
               
-              invoiceNumber: namecompare?.invoiceNumber,
-              mobile: namecompare?.mobile,
-              address: namecompare?.address,
-              date: namecompare?.date,
-              gender: namecompare?.gender,
-              age: namecompare?.age,
-            })
-          );
-        } else {
-          dispatch(
-            setFormData({
+              // invoiceNumber: namecompare?.invoiceNumber,
+              // mobile: namecompare?.mobile,
+              // address: namecompare?.address,
+              // date: namecompare?.date,
+              // gender: namecompare?.gender,
+              // age: namecompare?.age,
+      //       })
+      //     );
+      //   } else {
+      //     dispatch(
+      //       setFormData({
                                            
-              invoiceNumber: "",
+      //         invoiceNumber: "",
+      //         mobile: "",
+      //         address: "",
+      //         date: "",
+      //         gender: "",
+      //         age: "",
+      //       })
+      //     );
+      //   }
+      // }; 
+      
+      
+
+const handledropdownautofill =(newvalue:string |null   )=>{
+  if(newvalue){
+  dispatch(setSelectedName(newvalue));
+const datafromjson = Userdata.find((u)=> u.name === newvalue)
+if(datafromjson){
+  dispatch(setFormData({
+      invoiceNumber: datafromjson?.invoiceNumber,
+              mobile: datafromjson?.mobile,
+              address: datafromjson?.address,
+              date: datafromjson?.date,
+              gender: datafromjson?.gender,
+              age: datafromjson?.age,
+  })
+)
+}else{
+  dispatch(setFormData({
+invoiceNumber: "",
               mobile: "",
               address: "",
               date: "",
               gender: "",
               age: "",
-            })
-          );
-        }
-      };                                    
+
+  }))
+}
+  }
+}
+
         const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           const { name, value } = event.target;
+          
           dispatch(updateFormField({ field: name as keyof typeof formData, value }));
         };
                 
@@ -75,8 +107,8 @@ const dispatch = useDispatch();
   >
     <Box sx={{ flex: { xs: "1 1 100%", sm: "1 1 45%", md: "1 1 30%" } }}>
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Name</InputLabel>
-        <Select
+        <InputLabel id="demo-simple-select-label"></InputLabel>
+        {/* <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           label="Name"
@@ -87,7 +119,16 @@ const dispatch = useDispatch();
           {Userdata.map((user)=>( <MenuItem  value={user.name} > {user.name} </MenuItem>))}
 
           
-        </Select>
+        </Select> */}
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={Userdata.map((user) => user.name)}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="Name" />}
+          value={selectedName}
+          onChange={(_,newvalue)=>handledropdownautofill(newvalue) } 
+        />
       </FormControl>
     </Box>
     <Box sx={{ flex: { xs: "1 1 100%", sm: "1 1 45%", md: "1 1 30%" } }}>
@@ -111,8 +152,17 @@ const dispatch = useDispatch();
         variant="outlined"
         fullWidth
         value={formData.mobile}
-        onChange={handleTextChange}
+        onChange={
+          (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value) && value.length <= 10) {
+      handleTextChange(e);
+    }
+  }
+          
+        }
         inputProps={{ maxLength: 10 }}
+        
       />
     </Box>
     <Box sx={{ flex: { xs: "1 1 100%", sm: "1 1 45%", md: "1 1 30%" } }}>
@@ -160,6 +210,7 @@ const dispatch = useDispatch();
         value={formData.age}
         onChange={handleTextChange}
          type="number"
+         inputProps={{ min: 0, max: 100 }}
       />
     </Box>
     <Box

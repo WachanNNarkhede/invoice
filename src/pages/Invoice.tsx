@@ -1,11 +1,11 @@
 import Button from "@mui/material/Button";
-import "../App.css"
+import "../App.css";
 import { type Item } from "../app/slices/nvoicefiels";
 import {
   Container,
   FormControl,
-  MenuItem,
-  Select,
+  // MenuItem,
+  // Select,
   Table,
   TableBody,
   TableCell,
@@ -15,6 +15,9 @@ import {
   InputLabel,
   TextField,
   Box,
+  MenuItem,
+  Select,
+  
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../app/hooks";
@@ -32,19 +35,24 @@ function Invoicepage() {
     (state) => state.invoiceFields
   );
 
-
-
   const [items, setItems] = useState({
     itemame: "",
     price: "",
     quantity: "",
-    gst: "",     
+    gst: "",
   });
 
   useEffect(() => {
     if (items.price && items.quantity) {
       const calculatedGst = Number(items.price) * Number(items.quantity) * 0.18;
-      setItems((prev) => ({ ...prev, gst: calculatedGst.toFixed(2) }));
+      setItems((prev) => ({
+        ...prev,
+        gst: calculatedGst.toLocaleString("fullwide", {
+          useGrouping: false,
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+      }));
     } else {
       setItems((prev) => ({ ...prev, gst: "" }));
     }
@@ -52,34 +60,47 @@ function Invoicepage() {
 
   const [listItems, setListItems] = useState<Item[]>([]);
 
-  const handleItemsaveinrow = (field: keyof typeof items, value: string) => {
+    const handleItemsaveinrow = (field: keyof typeof items, value: string) => {
     setItems({ ...items, [field]: value });
   };
-
 
   //wheneven we want to  make changes in json object we use [] for keys
 
   const handleAddItem = () => {
-    if (items.itemame && items.price && items.quantity ) {
+    if (items.itemame && items.price && items.quantity) {
       setListItems([
         ...listItems,
         {
-          id: Date.now(), 
+          id: listItems.length +1,
           name: items.itemame,
           quantity: Number(items.quantity),
           price: Number(items.price),
           gst:
-            Number(items.gst) ||
-            Number(items.price) * Number(items.quantity) * 0.18,
+            Number(items.gst).toLocaleString("fullwide", {
+              useGrouping: false,
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }) ||
+            (
+              Number(items.price) *
+              Number(items.quantity) *
+              0.18
+            ).toLocaleString("fullwide", {
+              useGrouping: false,
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
         },
       ]);
     }
     console.log(listItems);
 
     setItems({
-      itemame: "",  price: "", quantity: "", gst: "",
+      itemame: "",
+      price: "",
+      quantity: "",
+      gst: "",
     });
-  
   };
 
   const grandtotal = listItems.reduce(
@@ -99,7 +120,16 @@ function Invoicepage() {
   // 1.18 also
 
   const handleSubmit = () => {
-    if ( selectedName && listItems.length && formData.address && formData.date && formData.gender && formData.age &&formData.invoiceNumber &&formData.mobile && grandtotal > 0
+    if (
+      selectedName &&
+      listItems.length &&
+      formData.address &&
+      formData.date &&
+      formData.gender &&
+      formData.age &&
+      formData.invoiceNumber &&
+      formData.mobile &&
+      grandtotal > 0
     ) {
       let existingBills;
 
@@ -108,7 +138,7 @@ function Invoicepage() {
         existingBills = Array.isArray(stored) ? stored : [];
       } catch (error) {
         existingBills = [];
-        console.log(error); 
+        console.log(error);
       }
 
       const newBill = { listItems, formData, grandtotal };
@@ -144,42 +174,47 @@ function Invoicepage() {
 
   const handleItemChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number) => {
-    const field = event.target.name;
+    index: number
+  ) => {
+    const field = event.target.name as keyof Item
     const value = event.target.value;
 
     setListItems((currentavalable) => {
       const newitem = [...currentavalable];
       const innerarrayvalue = { ...newitem[index] };
 
-      if(field === "itemame") {
-      if (value === "") {items.itemame = "";
+      if (field === "name") {
+        if (value === "") {
+        innerarrayvalue.name   = "";
         } else {
-          items.itemame = value;
+          innerarrayvalue.name = value;
         }
       }
       if (field === "price") {
-      if (value === " ") {items.price = "";
+        if (value === " ") {
+          innerarrayvalue.price = "";
         } else {
           innerarrayvalue.price = value;
         }
       }
       if (field === "quantity") {
-      if (value === "") {innerarrayvalue.quantity = "";
-        } else { innerarrayvalue.quantity = Number(value);
+        if (value === "") {
+          innerarrayvalue.quantity = "";
+        } else {
+          innerarrayvalue.quantity = Number(value);
         }
       }
       if (field === "gst") {
-        if (value === "") { innerarrayvalue.gst = ""; } 
-        else {innerarrayvalue.gst = Number(value);
+        if (value === "") {
+          innerarrayvalue.gst = "";
+        } else {
+          innerarrayvalue.gst = Number(value);
         }
       }
       newitem[index] = innerarrayvalue;
       return newitem;
     });
   };
-
-
   
 
   return (
@@ -230,6 +265,7 @@ function Invoicepage() {
                     size="small"
                     value={item.name}
                     name="name"
+
                     onChange={(e) => handleItemChange(e, index)}
                   />
                 </TableCell>
@@ -254,7 +290,14 @@ function Invoicepage() {
                   />
                 </TableCell>
                 <TableCell>
-                  {(Number(item.price) * Number(item.quantity)).toFixed(2)}
+                  {(Number(item.price) * Number(item.quantity)).toLocaleString(
+                    "fullwide",
+                    {
+                      useGrouping: false,
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }
+                  )}
                 </TableCell>
                 <TableCell>
                   <TextField
@@ -281,7 +324,7 @@ function Invoicepage() {
             <TableRow>
               <TableCell>
                 <FormControl sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id="itemame-label">Item Name</InputLabel>
+                  <InputLabel id="itemame-label"></InputLabel>
                   <Select
                     labelId="itemame-label"
                     id="itemame"
@@ -296,6 +339,10 @@ function Invoicepage() {
                     <MenuItem value="Item 2">Item 2</MenuItem>
                     <MenuItem value="Item 3">Item 3</MenuItem>
                   </Select>
+                
+                
+         
+
                 </FormControl>
               </TableCell>
               <TableCell>
@@ -310,6 +357,7 @@ function Invoicepage() {
                     handleItemsaveinrow("quantity", event.target.value)
                   }
                   type="number"
+                   inputProps={{ min: 0 }}
                 />
               </TableCell>
               <TableCell>
@@ -324,11 +372,19 @@ function Invoicepage() {
                     handleItemsaveinrow("price", event.target.value)
                   }
                   type="number"
+                   inputProps={{ min: 0 }}
                 />
               </TableCell>
 
               <TableCell>
-                {(Number(items.price) * Number(items.quantity)).toFixed(2)}
+                {(Number(items.price) * Number(items.quantity)).toLocaleString(
+                  "fullwide",
+                  {
+                    useGrouping: false,
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }
+                )}
               </TableCell>
               <TableCell>
                 <TextField
@@ -356,6 +412,8 @@ function Invoicepage() {
 
             {/*  we first have to access index for accessing name in json */}
             {/* to render array  in html we use .map  */}
+            {/* to access index in map we use index */}
+            
           </TableBody>
         </Table>
 
@@ -369,7 +427,11 @@ function Invoicepage() {
             width: "120px",
             marginTop: "20px",
           }}
-          value={grandtotal}
+          value={grandtotal.toLocaleString("fullwide", {
+            useGrouping: true,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
         />
 
         <TextField
@@ -382,7 +444,11 @@ function Invoicepage() {
             width: "120px",
             marginTop: "20px",
           }}
-          value={total}
+          value={total.toLocaleString("fullwide", {
+            useGrouping: false,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
         />
       </Container>
 
@@ -404,3 +470,82 @@ function Invoicepage() {
 }
 
 export default Invoicepage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        {/* <Autocomplete
+  options={["Item 1", "Item 2", "Item 3"]}
+  sx={{ width: 300 }}
+  renderInput={(params) => <TextField {...params} label="Item Name" />}
+  onChange={(_, value) => handleItemsaveinrow("itemame", value || "")}
+/> */}
