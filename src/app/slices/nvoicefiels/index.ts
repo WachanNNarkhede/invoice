@@ -21,7 +21,7 @@ export interface Item {
 export interface InvoiceState {
   selectedName: string;
   formData: FormData;
-  grandtotal: string;
+  grandtotalval: string;
   count: number;
 }
 
@@ -35,7 +35,7 @@ const initialState: InvoiceState = {
     gender: "",
     age: "",
   },
-  grandtotal: "0.00",
+  grandtotalval: "0.00",
   count: 0,
 };
 
@@ -46,24 +46,31 @@ const invoiceFieldsSlice = createSlice({
     setSelectedName(state, action: PayloadAction<string>) {
       state.selectedName = action.payload;
     },
-    setFormData(state, action: PayloadAction<FormData>) {
-      state.formData = action.payload;
-    },
-    updateFormField(
-      state,
-      action: PayloadAction<{ field: keyof FormData; value: string }>
-    ) {
-      const { field, value } = action.payload;
-      state.formData[field] = value;
-    },
-   
+    // setFormData(state, action: PayloadAction<FormData>) {
+    //   state.formData = action.payload;
+    // },
+                              
+    // updateFormField(
+    //   state,
+    //   action: PayloadAction<{ field: keyof FormData; value: string }>
+    // ) {
+    //   const { field, value } = action.payload;
+    //   state.formData[field] = value;
+    // },
+   setFormData(state, action: PayloadAction<Partial<FormData>>) {
+  state.formData = {
+    ...state.formData,   // keep old values
+    ...action.payload,   // update only the given ones
+  };
+}
+,
 updateCount(state, action: PayloadAction<number>) {
       state.count = action.payload;
     },
 
 
     updatetotalbill(state, action: PayloadAction<string>) {
-      state.grandtotal = action.payload;
+      state.grandtotalval = action.payload;
     },
   },
 });
@@ -71,7 +78,7 @@ updateCount(state, action: PayloadAction<number>) {
 export const {
   setSelectedName,
   setFormData,
-  updateFormField,
+  // updateFormField,
   updatetotalbill,
   updateCount
 } = invoiceFieldsSlice.actions;

@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Item 1",
+    "price":"100",
+    "gst":"18"
+
+  },
+  {
+    "name": "Item 2",
+     "price":"200",
+    "gst":"18"
+  },
+  {
+    "name": "Item 3",
+     "price":"300",
+    "gst":"18"
+  }
+]

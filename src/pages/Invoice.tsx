@@ -17,7 +17,7 @@ import {
   Box,
   MenuItem,
   Select,
-  
+  type SelectChangeEvent,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../app/hooks";
@@ -28,6 +28,7 @@ import {
 } from "../app/slices/nvoicefiels";
 import { useEffect, useState } from "react";
 import UpperBox from "../components/UpperBox";
+import Itemdata from "../data/Item.json";
 
 function Invoicepage() {
   const dispatch = useDispatch();
@@ -42,25 +43,39 @@ function Invoicepage() {
     gst: "",
   });
 
-  useEffect(() => {
-    if (items.price && items.quantity) {
-      const calculatedGst = Number(items.price) * Number(items.quantity) * 0.18;
+  const handledropdownforitem = (e: SelectChangeEvent) => {
+    const namme = e.target.value;
+    const selectedname = Itemdata.find((u) => u.name === namme);
+
+    if (selectedname) {
       setItems((prev) => ({
         ...prev,
-        gst: calculatedGst.toLocaleString("fullwide", {
-          useGrouping: false,
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }),
+        price: selectedname?.price,
+        gst: selectedname.gst
       }));
-    } else {
-      setItems((prev) => ({ ...prev, gst: "" }));
     }
-  }, [items.price, items.quantity]);
+    console.log(selectedname)
+  };
+
+  // useEffect(() => {
+  //   if (items.price && items.quantity) {
+  //     const calculatedGst = Number(items.price) * Number(items.quantity) * 0.18;
+  //     setItems((prev) => ({
+  //       ...prev,
+  //       gst: calculatedGst.toLocaleString("fullwide", {
+  //         useGrouping: false,
+  //         minimumFractionDigits: 2,
+  //         maximumFractionDigits: 2,
+  //       }),
+  //     }));
+  //   } else {
+  //     setItems((prev) => ({ ...prev, gst: "" }));
+  //   }
+  // }, [items.price, items.quantity,items.gst]);
 
   const [listItems, setListItems] = useState<Item[]>([]);
 
-    const handleItemsaveinrow = (field: keyof typeof items, value: string) => {
+  const handleItemsaveinrow = (field: keyof typeof items, value: string) => {
     setItems({ ...items, [field]: value });
   };
 
@@ -71,7 +86,7 @@ function Invoicepage() {
       setListItems([
         ...listItems,
         {
-          id: listItems.length +1,
+          id: listItems.length + 1,
           name: items.itemame,
           quantity: Number(items.quantity),
           price: Number(items.price),
@@ -176,7 +191,7 @@ function Invoicepage() {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number
   ) => {
-    const field = event.target.name as keyof Item
+    const field = event.target.name as keyof Item;
     const value = event.target.value;
 
     setListItems((currentavalable) => {
@@ -185,7 +200,7 @@ function Invoicepage() {
 
       if (field === "name") {
         if (value === "") {
-        innerarrayvalue.name   = "";
+          innerarrayvalue.name = "";
         } else {
           innerarrayvalue.name = value;
         }
@@ -215,6 +230,7 @@ function Invoicepage() {
       return newitem;
     });
   };
+
   
 
   return (
@@ -265,7 +281,6 @@ function Invoicepage() {
                     size="small"
                     value={item.name}
                     name="name"
-
                     onChange={(e) => handleItemChange(e, index)}
                   />
                 </TableCell>
@@ -329,20 +344,17 @@ function Invoicepage() {
                     labelId="itemame-label"
                     id="itemame"
                     name="itemame"
-                    value={items.itemame} 
+                    value={items.itemame}
                     label="Item Name"
-                    onChange={(event) =>
-                      handleItemsaveinrow("itemame", event.target.value)
-                    }
+                    onChange={(event) => {
+                      handleItemsaveinrow("itemame", event.target.value);
+                      handledropdownforitem(event);
+                    }}
                   >
-                    <MenuItem value="Item 1">Item 1</MenuItem>
-                    <MenuItem value="Item 2">Item 2</MenuItem>
-                    <MenuItem value="Item 3">Item 3</MenuItem>
+                    {Itemdata.map((u) => (
+                      <MenuItem value={u.name} >{u.name}</MenuItem>
+                    ))}
                   </Select>
-                
-                
-         
-
                 </FormControl>
               </TableCell>
               <TableCell>
@@ -357,7 +369,7 @@ function Invoicepage() {
                     handleItemsaveinrow("quantity", event.target.value)
                   }
                   type="number"
-                   inputProps={{ min: 0 }}
+                  inputProps={{ min: 0 }}
                 />
               </TableCell>
               <TableCell>
@@ -372,7 +384,7 @@ function Invoicepage() {
                     handleItemsaveinrow("price", event.target.value)
                   }
                   type="number"
-                   inputProps={{ min: 0 }}
+                  inputProps={{ min: 0 }}
                 />
               </TableCell>
 
@@ -413,7 +425,6 @@ function Invoicepage() {
             {/*  we first have to access index for accessing name in json */}
             {/* to render array  in html we use .map  */}
             {/* to access index in map we use index */}
-            
           </TableBody>
         </Table>
 
@@ -471,81 +482,11 @@ function Invoicepage() {
 
 export default Invoicepage;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        {/* <Autocomplete
+{
+  /* <Autocomplete
   options={["Item 1", "Item 2", "Item 3"]}
   sx={{ width: 300 }}
   renderInput={(params) => <TextField {...params} label="Item Name" />}
   onChange={(_, value) => handleItemsaveinrow("itemame", value || "")}
-/> */}
+/> */
+}
